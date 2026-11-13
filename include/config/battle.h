@@ -42,13 +42,13 @@
 #define B_RETURN_FRUSTRATION_DMG    GEN_LATEST // In Gen3+, Return and Frustration deal at least 1 damage. In Gen2, they deal none at the friendship value that gives them 0 power.
 
 // Type settings
-#define B_GHOSTS_ESCAPE             GEN_LATEST // In Gen6+, escape prevention fails on Ghost-types. Additionally, attempting to escape from a wild battle is always sucessful.
-#define B_PARALYZE_ELECTRIC         GEN_LATEST // In Gen6+, Electric-types can no longer be paralyzed.
-#define B_POWDER_GRASS              GEN_LATEST // In Gen6+, Grass-types are immune to powder and spore moves.
-#define B_UPDATED_TYPE_MATCHUPS     GEN_LATEST // Changes type matchups. src/data/types_info.h for details.
+#define B_GHOSTS_ESCAPE             GEN_6 // In Gen6+, escape prevention fails on Ghost-types. Additionally, attempting to escape from a wild battle is always sucessful.
+#define B_PARALYZE_ELECTRIC         GEN_6      // In Gen6+, Electric-types can no longer be paralyzed.
+#define B_POWDER_GRASS              GEN_6      // In Gen6+, Grass-types are immune to powder and spore moves.
+#define B_UPDATED_TYPE_MATCHUPS     GEN_2      // Changes type matchups. src/data/types_info.h for details.
 #define B_PRANKSTER_DARK_TYPES      GEN_LATEST // In Gen7+, Prankster-elevated status moves do not affect Dark-types.
 #define B_SHEER_COLD_IMMUNITY       GEN_LATEST // In Gen7+, Ice-types are immune to Sheer Cold.
-#define B_ROOST_PURE_FLYING         GEN_LATEST // In Gen5+, Roost turns pure Flying-types into Normal-types.
+#define B_ROOST_PURE_FLYING         GEN_5      // In Gen5+, Roost turns pure Flying-types into Normal-types.
 #define B_STATUS_TYPE_IMMUNITY      GEN_LATEST // In Gen1, Pokémon were immune to additional effects of attacking moves if they shared a type with the move.
 #define B_FIXED_DMG_IGNORES_TYPE    GEN_LATEST // In Gen1, fixed damage moves (Sonic Boom, Dragon Rage, Super Fang, Psywave, Seismic Toss, Night Shade, Bide, Counter) ignore type effectiveness and immunities.
 
@@ -70,9 +70,9 @@
                                                // As of Champions, freeze has a 25% chance of being thawed out with a hard cap of 3 turns.
 
 // Move data settings
-#define B_UPDATED_MOVE_DATA         GEN_LATEST // Updates move data in gMovesInfo, including Power, Accuracy, PP, category, range, and additional effects.
-#define B_UPDATED_MOVE_TYPES        GEN_LATEST // Updates move types in gMovesInfo.
-#define B_UPDATED_MOVE_FLAGS        GEN_LATEST // Updates move flags in gMovesInfo.
+#define B_UPDATED_MOVE_DATA         GEN_2      // Updates move data in gMovesInfo, including Power, Accuracy, PP, category, range, and additional effects.
+#define B_UPDATED_MOVE_TYPES        GEN_2      // Updates move types in gMovesInfo.
+#define B_UPDATED_MOVE_FLAGS        GEN_2      // Updates move flags in gMovesInfo.
 #define B_PHYSICAL_SPECIAL_SPLIT    GEN_LATEST // In Gens1-3, a move's type determines if it will do physical or special damage. The category icon in the summary will reflect this.
 #define B_RECOIL_IF_MISS_DMG        GEN_LATEST // Crash damage's formula. See EFFECT_RECOIL_IF_MISS.
 #define B_KLUTZ_FLING_INTERACTION   GEN_LATEST // In Gen5+, Pokémon with the Klutz Ability can no longer use Fling.
@@ -88,9 +88,9 @@
 #define B_UPDATED_ABILITY_DATA      GEN_LATEST // Affects flags.
 
 // Move accuracy settings
-#define B_TOXIC_NEVER_MISS          GEN_LATEST // In Gen6+, Toxic bypasses accuracy checks when used by Poison-types.
+#define B_TOXIC_NEVER_MISS          GEN_6      // In Gen6+, Toxic bypasses accuracy checks when used by Poison-types.
 #define B_MINIMIZE_DMG_ACC          GEN_LATEST // In Gen6+, moves that deal double damage to minimized Pokémon will bypass accuracy checks.
-#define B_BLIZZARD_HAIL             GEN_LATEST // In Gen4+, Blizzard bypasses accuracy checks if it's hailing.
+#define B_BLIZZARD_HAIL             GEN_4 // In Gen4+, Blizzard bypasses accuracy checks if it's hailing.
 #define B_SHEER_COLD_ACC            GEN_LATEST // In Gen7+, Sheer Cold's accuracy is reduced to 20% if the user isn't an Ice-type.
 
 // Move stat change settings
@@ -366,7 +366,7 @@
 #define B_HP_PERCENTAGE_DISPLAY             FALSE      // If set to TRUE, Pokémon on the opposing side's HP will be displayed in percentage alongside the HP bar. In single battles, this extends the healthbox to add the percentage below the HP bar. In double battles, the same input used to toggle your side's HP values will also toggle the opposing side's percentage display.
 
 // Catching settings
-#define B_SEMI_INVULNERABLE_CATCH       GEN_LATEST // In Gen4+, you cannot throw a ball against a Pokémon that is in a semi-invulnerable state (Dig/Fly/etc).
+#define B_SEMI_INVULNERABLE_CATCH       GEN_4VVVVV // In Gen4+, you cannot throw a ball against a Pokémon that is in a semi-invulnerable state (Dig/Fly/etc).
 #define B_CATCHING_CHARM_BOOST          100        // % increase in critical capture odds if the player has the Catching Charm.
 #define B_INCAPACITATED_CATCH_BONUS     GEN_LATEST // In Gen5+, the catch rate bonus for a sleeping or frozen Pokémon is 2.5x instead of 2x.
 #define B_LOW_LEVEL_CATCH_BONUS         GEN_LATEST // In Gen9+, a bonus is added to the catch rate when catching a Pokémon lower than level 13. In Gen8, the bonus is applied to Pokémon lower than level 20.
