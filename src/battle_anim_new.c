@@ -8867,3 +8867,204 @@ void AnimTask_GetCommanderType(u8 taskId)
 
     DestroyAnimVisualTask(taskId);
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+static void AnimPetalDance(struct Sprite *sprite);
+static void AnimPetalDance_Step(struct Sprite *sprite);
+
+static const union AnimCmd sPokeBallPuffAnimCmdsTL[] =
+{
+    ANIMCMD_FRAME(0x14, 4),
+    ANIMCMD_FRAME(0x10, 4),
+    ANIMCMD_FRAME(0xC, 4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sPokeBallPuffAnimCmdsTR[] =
+{
+    ANIMCMD_FRAME(0x14, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(0x10, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(0xC, 4, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sPokeBallPuffAnimCmdsBL[] =
+{
+    ANIMCMD_FRAME(0x14, 4, .vFlip = TRUE),
+    ANIMCMD_FRAME(0x10, 4, .vFlip = TRUE),
+    ANIMCMD_FRAME(0xC, 4, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sPokeBallPuffAnimCmdsBR[] =
+{
+    ANIMCMD_FRAME(0x14, 4, .hFlip = TRUE, .vFlip = TRUE),
+    ANIMCMD_FRAME(0x10, 4, .hFlip = TRUE, .vFlip = TRUE),
+    ANIMCMD_FRAME(0xC, 4, .hFlip = TRUE, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sPokeBallPuffAnimTable[] =
+{
+    sPokeBallPuffAnimCmdsTL,
+    sPokeBallPuffAnimCmdsTR,
+    sPokeBallPuffAnimCmdsBL,
+    sPokeBallPuffAnimCmdsBR,
+};
+const struct SpriteTemplate gPokeBallPuffSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_MUSIC_NOTES,
+    .paletteTag = ANIM_TAG_MUSIC_NOTES,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sPokeBallPuffAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinear2,
+};
+
+const struct SpriteTemplate gOrbCombineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gAnims_Generic0Ends,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveToMonPos,
+};
+
+const struct SpriteTemplate gOrbSpiralInwardSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteSpiralToMonPos,
+};
+
+const struct SpriteTemplate gOrbRisingSpriteTemplate =    
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteRises,
+};
+
+const struct SpriteTemplate gAbsorptionOrbCombineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PENCIL_2,
+    .paletteTag = ANIM_TAG_PENCIL_2,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gAnims_Generic0Ends,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveToMonPos,
+};
+
+static const union AnimCmd sAnim_LargeOrb[] =
+{
+    ANIMCMD_FRAME(8, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sLargeOrb[] =
+{
+    sAnim_LargeOrb,
+};
+const struct SpriteTemplate gOrbProjectileSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sLargeOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolic,
+};
+const struct SpriteTemplate gOrbProjectileReversedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sLargeOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolicReversed2,
+};
+const struct SpriteTemplate gAbsorptionOrbProjectileReversedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PENCIL_2,
+    .paletteTag = ANIM_TAG_PENCIL_2,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sLargeOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolicReversed2,
+};
+const struct SpriteTemplate gLargeOrbStaticSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sLargeOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStatic,
+};
+
+static const union AnimCmd sPetalDanceAnimCmds[] =
+{
+    ANIMCMD_FRAME(1, 0),
+    ANIMCMD_JUMP(0),
+};
+static const union AnimCmd *const sPetalDanceAnimTable[] =
+{
+    sPetalDanceAnimCmds,
+};
+const struct SpriteTemplate gPetalDanceParticleSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_FIRE,
+    .paletteTag = ANIM_TAG_FIRE,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sPetalDanceAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimPetalDance,
+};
+
+static void AnimPetalDance(struct Sprite* sprite)
+{
+    if (gBattleAnimArgs[5] != ANIM_ATTACKER)
+        InitSpritePosToAnimTarget(sprite, TRUE);
+    else
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[5] = -gBattleAnimArgs[5];
+    sprite->data[0] = gBattleAnimArgs[3];
+    sprite->data[1] = gBattleAnimArgs[2];
+    sprite->callback = AnimPetalDance_Step;
+    sprite->callback(sprite);
+}
+
+static void AnimPetalDance_Step(struct Sprite* sprite)
+{
+    if (GetBattlerSide(gBattleAnimTarget))
+        sprite->x2 = -Sin(sprite->data[0], 25);
+    else
+        sprite->x2 = Sin(sprite->data[0], 25);
+
+    sprite->data[0] += 2;
+    sprite->data[0] &= 0xFF;
+    sprite->data[1]++;
+    if (!(sprite->data[1] & 1))
+        sprite->y2++;
+
+    if (sprite->data[1] > 80)
+        DestroyAnimSprite(sprite);
+}
+
+void AnimTask_GetTargetSide(u8 taskId)
+{
+    gBattleAnimArgs[7] = GetBattlerSide(gBattleAnimTarget);
+    DestroyAnimVisualTask(taskId);
+}

@@ -1762,3 +1762,133 @@ static void AnimSnowflakes_Step(struct Sprite *sprite)
     if (sprite->animEnded)
         DestroySprite(sprite);
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+static const union AnimCmd sAnim_IceCrystalFull[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_IceCrystalFull[] =
+{
+    sAnim_IceCrystalFull,
+};
+
+static const union AnimCmd sAnim_IceCrystalHalf[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_IceCrystalHalf[] =
+{
+    sAnim_IceCrystalHalf,
+};
+
+const struct SpriteTemplate gBlizzardIceFallingSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ICE_CRYSTALS,
+    .paletteTag = ANIM_TAG_ICE_CRYSTALS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x16,
+    .anims = sAnims_IceCrystalFull,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinearWithXFlip,
+};
+
+const struct SpriteTemplate gBlizzardIceLandedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ICE_CRYSTALS,
+    .paletteTag = ANIM_TAG_ICE_CRYSTALS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sAnims_IceCrystalHalf,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStatic,
+};
+
+const struct SpriteTemplate gIceCrystalSpriteTemplate =    
+{
+    .tileTag = ANIM_TAG_ICE_CRYSTALS,
+    .paletteTag = ANIM_TAG_ICE_CRYSTALS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteRises,
+};
+
+static void AnimAuroraBeam(struct Sprite *);
+
+static const union AnimCmd sAnim_AuroraBeamOrb[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_AuroraBeamOrb[] =
+{
+    sAnim_AuroraBeamOrb,
+};
+
+const struct SpriteTemplate gAuroraBeamOrbSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_RAINBOW_RINGS,
+    .paletteTag = ANIM_TAG_RAINBOW_RINGS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_AuroraBeamOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimAuroraBeam,
+};
+
+static const union AnimCmd sAnim_AuroraBeamTube[] =
+{
+    ANIMCMD_FRAME(4, 1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnims_AuroraBeamTube[] =
+{
+    sAnim_AuroraBeamTube,
+};
+
+const struct SpriteTemplate gAuroraBeamTubeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_RAINBOW_RINGS,
+    .paletteTag = ANIM_TAG_RAINBOW_RINGS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_AuroraBeamTube,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimAuroraBeam,
+};
+
+static void AnimAuroraBeam(struct Sprite *sprite)
+{
+    bool8 animType;
+    u8 coordType;
+    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    {
+        gBattleAnimArgs[0] *= -1;
+        if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_LEFT)
+            gBattleAnimArgs[0] *= -1;
+    }
+    if ((gBattleAnimArgs[5] & 0xFF00) == 0)
+        animType = TRUE;
+    else
+        animType = FALSE;
+    if ((u8)gBattleAnimArgs[5] == 0)
+        coordType = BATTLER_COORD_Y_PIC_OFFSET;
+    else
+        coordType = 1;
+    InitSpritePosToAnimAttacker(sprite, animType);
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
+    sprite->callback = StartAnimLinearTranslation;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}

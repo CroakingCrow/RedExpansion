@@ -766,3 +766,48 @@ static void WaitForFissureCompletion(u8 taskId)
         gBattle_BG3_Y = task->data[2];
     }
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+static const union AnimCmd sSandAttackAnim1Cmds[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sSandAttackAnim2Cmds[] =
+{
+    ANIMCMD_FRAME(1, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sSandAttackAnim3Cmds[] =
+{
+    ANIMCMD_FRAME(2, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sSandAttackAnim4Cmds[] =
+{
+    ANIMCMD_FRAME(3, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sSandAttackAnim5Cmds[] =
+{
+    ANIMCMD_FRAME(4, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sSandAttackAnimTable[] =
+{
+    sSandAttackAnim1Cmds,
+    sSandAttackAnim2Cmds,
+    sSandAttackAnim3Cmds,
+    sSandAttackAnim4Cmds,
+    sSandAttackAnim5Cmds,
+};
+const struct SpriteTemplate gSandAttackSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_MIST_CLOUD,
+    .paletteTag = ANIM_TAG_MIST_CLOUD,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sSandAttackAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStaticVisualXFlip,
+};

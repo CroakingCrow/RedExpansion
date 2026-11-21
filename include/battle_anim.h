@@ -60,7 +60,7 @@ struct LinkBattleAnim
     u8 stockpileCounter:4;
 };
 
-#define ANIM_ARGS_COUNT 8
+#define ANIM_ARGS_COUNT 9
 #define MAX_ANIM_CALL_DEPTH 4
 
 extern void (*gAnimScriptCallback)(void);
@@ -181,6 +181,26 @@ void InitAndRunAnimFastLinearTranslation(struct Sprite *sprite);
 void TranslateSpriteLinearById(struct Sprite *sprite);
 void TranslateSpriteLinear(struct Sprite *sprite);
 void AnimSpriteOnMonPos(struct Sprite *sprite);
+
+// Gen 1 style sprite callbacks (battle_anim_mons.c)
+extern const union AnimCmd *const gAnims_Generic0Ends[];
+void AnimSpriteMoveLinear(struct Sprite *sprite);
+void AnimSpriteMoveLinear2(struct Sprite *sprite);
+void AnimSpriteMoveLinearWithXFlip(struct Sprite *sprite);
+void AnimSpriteMoveLinearWithXFlipMirrored(struct Sprite *sprite);
+void AnimSpriteMoveLinearWithXYFlip(struct Sprite *sprite);
+void AnimSpriteMoveToMonPos(struct Sprite *sprite);
+void AnimSpriteProjectileParabolic(struct Sprite *sprite);
+void AnimSpriteProjectileParabolicReversed1(struct Sprite *sprite);
+void AnimSpriteProjectileParabolicReversed2(struct Sprite *sprite);
+void AnimSpriteRises(struct Sprite *sprite);
+void AnimSpriteSpiralToMonPos(struct Sprite *sprite);
+void AnimSpriteStatic(struct Sprite *sprite);
+void AnimSpriteStaticVisualXFlip(struct Sprite *sprite);
+void AnimSpriteStaticVisualXYFlipWithHeightAdjustment(struct Sprite *sprite);
+void AnimSpriteStaticPositionXYFlip(struct Sprite *sprite);
+void AnimSpriteStaticMirrored(struct Sprite *sprite);
+void AnimQuestionMarkGen1(struct Sprite *sprite);
 void InitAnimLinearTranslationWithSpeedAndPos(struct Sprite *sprite);
 void TranslateSpriteInCircle(struct Sprite *sprite);
 void SetGrayscaleOrOriginalPalette(u16 paletteNum, bool8 restoreOriginalColor);
@@ -439,6 +459,32 @@ extern const struct OamData gOamData_AffineOff_ObjBlend_32x32;
 extern const struct OamData gOamData_AffineOff_ObjBlend_64x64;
 extern const struct OamData gOamData_AffineNormal_ObjBlend_32x32;
 extern const struct OamData gOamData_AffineOff_ObjNormal_16x32;
+extern const struct OamData gOamData_AffineOff_ObjNormal_16x8;
+extern const struct OamData gOamData_AffineOff_ObjNormal_32x8;
+extern const struct OamData gOamData_AffineOff_ObjNormal_8x32;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_16x8;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_32x8;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_32x16;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_8x16;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_8x32;
+extern const struct OamData gOamData_AffineNormal_ObjNormal_16x32;
+extern const struct OamData gOamData_AffineDouble_ObjNormal_16x8;
+extern const struct OamData gOamData_AffineDouble_ObjNormal_32x8;
+extern const struct OamData gOamData_AffineDouble_ObjNormal_8x32;
+extern const struct OamData gOamData_AffineOff_ObjBlend_16x8;
+extern const struct OamData gOamData_AffineOff_ObjBlend_32x8;
+extern const struct OamData gOamData_AffineOff_ObjBlend_8x32;
+extern const struct OamData gOamData_AffineOff_ObjBlend_32x64;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_16x8;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_32x8;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_32x16;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_64x32;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_8x32;
+extern const struct OamData gOamData_AffineNormal_ObjBlend_16x32;
+extern const struct OamData gOamData_AffineDouble_ObjBlend_16x8;
+extern const struct OamData gOamData_AffineDouble_ObjBlend_8x32;
+extern const struct OamData gOamData_AffineDouble_ObjBlend_16x32;
+extern const struct OamData gOamData_AffineDouble_ObjBlend_32x64;
 extern const struct OamData gOamData_AffineDouble_ObjBlend_8x8;
 extern const struct OamData gOamData_AffineDouble_ObjNormal_32x32;
 extern const struct OamData gOamData_AffineNormal_ObjBlend_64x64;

@@ -1321,3 +1321,55 @@ static void AnimTask_LoadWindstormBackground_Step(u8 taskId)
         break;
     }
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+static void AnimGustTornado(struct Sprite *sprite);
+
+static const union AnimCmd sAnim_GustTornado[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(0, 4, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+static const union AnimCmd *const sAnims_GustTornado[] =
+{
+    sAnim_GustTornado,
+};
+const struct SpriteTemplate gGustTornadoSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_GUST,
+    .paletteTag = ANIM_TAG_GUST,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = sAnims_GustTornado,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimGustTornado,
+};
+
+static void AnimGustTornado(struct Sprite *sprite)
+{
+    bool8 animType;
+    u8 coordType;
+    if (GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    {
+        gBattleAnimArgs[0] *= -1;
+        if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_LEFT)
+            gBattleAnimArgs[0] *= -1;
+    }
+    if ((gBattleAnimArgs[5] & 0xFF00) == 0)
+        animType = TRUE;
+    else
+        animType = FALSE;
+    if ((u8)gBattleAnimArgs[5] == 0)
+        coordType = BATTLER_COORD_Y_PIC_OFFSET;
+    else
+        coordType = 1;
+    InitSpritePosToAnimAttacker(sprite, animType);
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
+    sprite->callback = StartAnimLinearTranslation;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}

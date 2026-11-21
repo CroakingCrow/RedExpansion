@@ -897,31 +897,15 @@ const struct SpriteTemplate gAssistPawprintSpriteTemplate =
     .callback = AnimAssistPawprint,
 };
 
-const union AffineAnimCmd gBarrageBallAffineAnimCmds1[] =
+const struct SpriteTemplate gBarrageBallSpriteTemplate =    
 {
-    AFFINEANIMCMD_FRAME(0, 0, -4, 24),
-    AFFINEANIMCMD_END,
-};
-
-const union AffineAnimCmd gBarrageBallAffineAnimCmds2[] =
-{
-    AFFINEANIMCMD_FRAME(0x100, 0x100, -64, 0),
-    AFFINEANIMCMD_FRAME(0, 0, 4, 24),
-    AFFINEANIMCMD_END,
-};
-
-const union AffineAnimCmd *const gBarrageBallAffineAnimTable[] =
-{
-    gBarrageBallAffineAnimCmds1,
-    gBarrageBallAffineAnimCmds2,
-};
-
-const struct SpriteTemplate gBarrageBallSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_RED_BALL,
-    .paletteTag = ANIM_TAG_RED_BALL,
-    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .affineAnims = gBarrageBallAffineAnimTable,
+    .tileTag = ANIM_TAG_BLACK_BALL_2,
+    .paletteTag = ANIM_TAG_BLACK_BALL_2,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolic,
 };
 
 const struct SpriteTemplate gSmellingSaltsHandSpriteTemplate =

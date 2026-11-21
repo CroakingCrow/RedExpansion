@@ -684,3 +684,46 @@ static void AnimAnimSyrupBomb(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[1];
     sprite->callback = AnimSyrupBomb_Step;
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+const struct SpriteTemplate gStatusPoisonSkullSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORANGE,
+    .paletteTag = ANIM_TAG_ORANGE,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gAnims_Generic0Ends,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimQuestionMarkGen1,
+};
+
+static const union AnimCmd sAnim_SludgeSplat[] =
+{
+    ANIMCMD_FRAME(8, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnims_SludgeSplat[] =
+{
+    sAnim_SludgeSplat,
+};
+const struct SpriteTemplate gSludgeProjectileGen1SpriteTemplate =
+{
+    .tileTag = ANIM_TAG_POISON_BUBBLE,
+    .paletteTag = ANIM_TAG_POISON_BUBBLE,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_SludgeSplat,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolic,
+};
+
+const struct SpriteTemplate gSludgeSplatSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_POISON_BUBBLE,
+    .paletteTag = ANIM_TAG_POISON_BUBBLE,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_SludgeSplat,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStatic,
+};

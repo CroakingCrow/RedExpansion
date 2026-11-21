@@ -9,7 +9,6 @@ static void AnimMegahornHorn(struct Sprite *);
 static void AnimLeechLifeNeedle(struct Sprite *);
 static void AnimTranslateWebThread(struct Sprite *);
 static void AnimTranslateWebThread_Step(struct Sprite *);
-static void AnimStringWrap(struct Sprite *);
 static void AnimSpiderWeb_Step(struct Sprite *);
 static void AnimSpiderWeb_End(struct Sprite *);
 static void AnimTailGlowOrb(struct Sprite *);
@@ -90,12 +89,24 @@ const struct SpriteTemplate gWebThreadSpriteTemplate =
     .callback = AnimTranslateWebThread,
 };
 
+static const union AnimCmd sAnim_StringWrap[] =
+{
+    ANIMCMD_FRAME(4, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnims_StringWrap[] =
+{
+    sAnim_StringWrap,
+};
 const struct SpriteTemplate gStringWrapSpriteTemplate =
 {
     .tileTag = ANIM_TAG_STRING,
     .paletteTag = ANIM_TAG_STRING,
-    .oam = &gOamData_AffineOff_ObjNormal_64x32,
-    .callback = AnimStringWrap,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_StringWrap,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinearWithXFlipMirrored,
 };
 
 static const union AffineAnimCmd sAffineAnim_SpiderWeb[] =
@@ -264,24 +275,6 @@ static void AnimTranslateWebThread_Step(struct Sprite *sprite)
 
     sprite->x2 += Sin(sprite->data[6], sprite->data[5]);
     sprite->data[6] = (sprite->data[6] + 13) & 0xFF;
-}
-
-// Second stage of String Shot
-static void AnimStringWrap(struct Sprite *sprite)
-{
-    CMD_ARGS(x, y);
-
-    SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
-    if (!IsOnPlayerSide(gBattleAnimAttacker))
-        sprite->x -= cmd->x;
-    else
-        sprite->x += cmd->x;
-
-    sprite->y += cmd->y;
-    if (IsOnPlayerSide(gBattleAnimTarget))
-        sprite->y += 8;
-
-    sprite->callback = AnimStringWrap_Step;
 }
 
 void AnimStringWrap_Step(struct Sprite *sprite)
@@ -464,3 +457,15 @@ static void AnimTailGlowOrb(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
     sprite->callback = RunStoredCallbackWhenAffineAnimEnds;
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+const struct SpriteTemplate gStringShotSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SPIDER_WEB,
+    .paletteTag = ANIM_TAG_SPIDER_WEB,
+    .oam = &gOamData_AffineOff_ObjNormal_64x64,
+    .anims = gAnims_Generic0Ends,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStaticVisualXYFlipWithHeightAdjustment,
+};

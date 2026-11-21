@@ -1202,3 +1202,309 @@ void AnimFlashingHitSplat_Step(struct Sprite *sprite)
     if (sprite->data[0]++ > 12)
         DestroyAnimSprite(sprite);
 }
+
+// ---- Gen 1 style animations (ported from FRG1S) ----
+static void AnimToTargetInSinWaveMirrored(struct Sprite *sprite);
+static void AnimToTargetInSinWave3_Step(struct Sprite *sprite);
+
+const struct SpriteTemplate gHitSplatWithXYFlipSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_IMPACT,
+    .paletteTag = ANIM_TAG_IMPACT,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gAnims_Generic0Ends,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteStaticPositionXYFlip,
+};
+
+static const union AnimCmd sAnim_HornEndsNormal[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_HornEndsFlipped[] =
+{
+    ANIMCMD_FRAME(0, 1, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sHornEndsAnimTable[] =
+{
+    sAnim_HornEndsNormal,
+    sAnim_HornEndsFlipped,
+};
+const struct SpriteTemplate gHornHitGen1SpriteTemplate =
+{
+    .tileTag = ANIM_TAG_HORN_HIT,
+    .paletteTag = ANIM_TAG_HORN_HIT,
+    .oam = &gOamData_AffineOff_ObjNormal_16x8,
+    .anims = sHornEndsAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinearWithXFlipMirrored,
+};
+
+static const union AnimCmd sAnim_sSupersonic[] =
+{
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_FRAME(4, 4, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_sSupersonicFlipped[] =
+{
+    ANIMCMD_FRAME(4, 4, .hFlip = TRUE),
+    ANIMCMD_FRAME(4, 4, .hFlip = TRUE, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sSupersonicAnimTable[] =
+{
+    sAnim_sSupersonic,
+    sAnim_sSupersonicFlipped,
+};
+
+const struct SpriteTemplate gSupersonicSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_MUSIC_NOTES,
+    .paletteTag = ANIM_TAG_MUSIC_NOTES,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sSupersonicAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimToTargetInSinWaveMirrored,
+};
+
+static const union AnimCmd sAnim_BindTendrils[] =
+{
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnims_BindTendrils[] =
+{
+    sAnim_BindTendrils,
+};
+const struct SpriteTemplate gBindTendrilsSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_TENDRILS,
+    .paletteTag = ANIM_TAG_TENDRILS,
+    .oam = &gOamData_AffineOff_ObjNormal_64x64,
+    .anims = sAnims_BindTendrils,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteOnMonPos,
+};
+
+static const union AnimCmd sAnim_DefenseCurl1[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl2[] =
+{
+    ANIMCMD_FRAME(1, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl3[] =
+{
+    ANIMCMD_FRAME(0, 1, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl4[] =
+{
+    ANIMCMD_FRAME(4, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl5[] =
+{
+    ANIMCMD_FRAME(4, 1, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl6[] =
+{
+    ANIMCMD_FRAME(0, 1, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl7[] =
+{
+    ANIMCMD_FRAME(1, 1, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_DefenseCurl8[] =
+{
+    ANIMCMD_FRAME(0, 1, .vFlip = TRUE, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sDefenseCurlAnimTable[] =
+{
+    sAnim_DefenseCurl1,
+    sAnim_DefenseCurl2,
+    sAnim_DefenseCurl3,
+    sAnim_DefenseCurl4,
+    sAnim_DefenseCurl5,
+    sAnim_DefenseCurl6,
+    sAnim_DefenseCurl7,
+    sAnim_DefenseCurl8,
+};
+const struct SpriteTemplate gDefenseCurlCombineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_RED_BALL,
+    .paletteTag = ANIM_TAG_RED_BALL,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sDefenseCurlAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinear2,
+};
+
+static const union AnimCmd sAnim_SolidSquare[] =
+{
+    ANIMCMD_FRAME(4, 6),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnims_SolidSquare[] =
+{
+    sAnim_SolidSquare,
+};
+const struct SpriteTemplate gSolidSquareProjectileSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_SolidSquare,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolicReversed1,
+};
+const struct SpriteTemplate gSolidSquareProjectileReversedSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = sAnims_SolidSquare,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteProjectileParabolicReversed2,
+};
+const struct SpriteTemplate gSolidSquareCombineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_ORBS,
+    .paletteTag = ANIM_TAG_ORBS,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sAnims_SolidSquare,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinearWithXYFlip,
+};
+
+static const union AnimCmd sAnim_Harden1[] =
+{
+    ANIMCMD_FRAME(8, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden2[] =
+{
+    ANIMCMD_FRAME(9, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden3[] =
+{
+    ANIMCMD_FRAME(8, 1, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden4[] =
+{
+    ANIMCMD_FRAME(12, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden5[] =
+{
+    ANIMCMD_FRAME(12, 1, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden6[] =
+{
+    ANIMCMD_FRAME(8, 1, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden7[] =
+{
+    ANIMCMD_FRAME(9, 1, .vFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_Harden8[] =
+{
+    ANIMCMD_FRAME(8, 1, .vFlip = TRUE, .hFlip = TRUE),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sHardenSquareAnimTable[] =
+{
+    sAnim_Harden1,
+    sAnim_Harden2,
+    sAnim_Harden3,
+    sAnim_Harden4,
+    sAnim_Harden5,
+    sAnim_Harden6,
+    sAnim_Harden7,
+    sAnim_Harden8,
+};
+const struct SpriteTemplate gHardenCombineSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_RED_BALL,
+    .paletteTag = ANIM_TAG_RED_BALL,
+    .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = sHardenSquareAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimSpriteMoveLinear2,
+};
+
+static void AnimToTargetInSinWaveMirrored(struct Sprite *sprite)
+{
+    u16 retArg;
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            StartSpriteAnim(sprite, 1);
+        }
+    else
+        {
+            StartSpriteAnim(sprite, 0);
+        }
+
+    InitSpritePosToAnimAttacker(sprite, TRUE);
+    sprite->data[0] = 30;
+    sprite->data[1] = sprite->x;
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->data[3] = sprite->y;
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = (0xD200 / sprite->data[0]) * 2;
+    sprite->data[7] = gBattleAnimArgs[3] / 4;
+    retArg = gBattleAnimArgs[7];
+    if (gBattleAnimArgs[7] > 127)
+    {
+        sprite->data[6] = (retArg - 127) * 256;
+        sprite->data[7] = -sprite->data[7];
+    }
+    else
+    {
+        sprite->data[6] = retArg * 256;
+    }
+    sprite->callback = AnimToTargetInSinWave3_Step;
+    sprite->callback(sprite);
+}
+
+static void AnimToTargetInSinWave3_Step(struct Sprite *sprite)
+{
+    if (AnimTranslateLinear(sprite))
+        DestroyAnimSprite(sprite);
+    sprite->y2 += Sin(sprite->data[6] >> 8, sprite->data[7]);
+    if ((sprite->data[6] + sprite->data[5]) >> 8 > 127)
+    {
+        sprite->data[6] = 0;
+        sprite->data[7] = -sprite->data[7];
+    }
+    else
+    {
+        sprite->data[6] += sprite->data[5];
+    }
+}

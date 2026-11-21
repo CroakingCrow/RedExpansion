@@ -2474,3 +2474,455 @@ u8 GetGhostSpriteDefault_Y(enum BattlerId battler)
     else
         return GetBattlerSpriteCoord(battler, BATTLER_COORD_Y);
 }
+
+// ---- Gen 1 style sprite callbacks (ported from FRG1S) ----
+static void AnimSpriteMoveLinear_Step(struct Sprite *);
+static void AnimSpriteProjectileParabolic_Step(struct Sprite *);
+
+static const union AnimCmd sAnim_Generic0Ends[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+const union AnimCmd *const gAnims_Generic0Ends[] =
+{
+    sAnim_Generic0Ends,
+};
+
+void AnimSpriteMoveLinear(struct Sprite *sprite)
+{
+    StartSpriteAnim(sprite, gBattleAnimArgs[6]); // Anim Number
+
+    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    sprite->data[0] = gBattleAnimArgs[4]; // Duration
+    sprite->data[1] = sprite->x + gBattleAnimArgs[0]; // Starting X
+    sprite->data[2] = sprite->x + gBattleAnimArgs[2]; // Ending X
+    sprite->data[3] = sprite->y + gBattleAnimArgs[1]; // Starting Y
+    sprite->data[4] = sprite->y + gBattleAnimArgs[3]; // Ending Y
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = 0;
+    sprite->data[6] = 0;
+    sprite->data[7] = 0;
+    sprite->callback = AnimSpriteMoveLinear_Step;
+}
+
+void AnimSpriteMoveLinear2(struct Sprite *sprite)
+{
+    u8 battler = (gBattleAnimArgs[5] == ANIM_ATTACKER)
+                ? gBattleAnimAttacker
+                : gBattleAnimTarget;
+    u8 side   = GetBattlerSide(battler);
+
+    s16 startX =  gBattleAnimArgs[0];
+    s16 startY =  gBattleAnimArgs[1];
+    s16 endX   =  gBattleAnimArgs[2];
+    s16 endY   =  gBattleAnimArgs[3];
+    u8  duration = gBattleAnimArgs[4];
+    u8  animId   = gBattleAnimArgs[6];
+    u8  frame    = gBattleAnimArgs[7];
+
+    if (side == B_SIDE_OPPONENT)
+    {
+        startX      = -startX;
+        endX        = -endX;
+        sprite->hFlip = TRUE;
+    }
+    else
+    {
+        sprite->hFlip = FALSE;
+    }
+
+    StartSpriteAnim(sprite, animId);
+    sprite->animCmdIndex = frame;
+
+    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    sprite->data[0] = duration;  
+    sprite->data[1] = sprite->x + startX;
+    sprite->data[2] = sprite->x + endX;
+    sprite->data[3] = sprite->y + startY;
+    sprite->data[4] = sprite->y + endY;
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = 0;
+    sprite->data[6] = 0;
+    sprite->data[7] = 0;
+    sprite->callback = AnimSpriteMoveLinear_Step;
+}
+
+void AnimSpriteMoveLinearWithXFlip(struct Sprite *sprite)
+{
+    StartSpriteAnim(sprite, gBattleAnimArgs[6]); // Anim Number
+
+    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+            gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        }
+
+    sprite->data[0] = gBattleAnimArgs[4]; // Duration
+    sprite->data[1] = sprite->x + gBattleAnimArgs[0]; // Starting X
+    sprite->data[2] = sprite->x + gBattleAnimArgs[2]; // Ending X
+    sprite->data[3] = sprite->y + gBattleAnimArgs[1]; // Starting Y
+    sprite->data[4] = sprite->y + gBattleAnimArgs[3]; // Ending Y
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = 0;
+    sprite->data[6] = 0;
+    sprite->data[7] = 0;
+    sprite->callback = AnimSpriteMoveLinear_Step;
+}
+
+void AnimSpriteMoveLinearWithXFlipMirrored(struct Sprite *sprite)
+{
+    StartSpriteAnim(sprite, gBattleAnimArgs[6]); // Anim Number
+
+    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+            gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+            sprite->hFlip = TRUE;
+        }
+    else
+        {
+            sprite->hFlip = FALSE;
+        }
+
+
+    sprite->data[0] = gBattleAnimArgs[4]; // Duration
+    sprite->data[1] = sprite->x + gBattleAnimArgs[0]; // Starting X
+    sprite->data[2] = sprite->x + gBattleAnimArgs[2]; // Ending X
+    sprite->data[3] = sprite->y + gBattleAnimArgs[1]; // Starting Y
+    sprite->data[4] = sprite->y + gBattleAnimArgs[3]; // Ending Y
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = 0;
+    sprite->data[6] = 0;
+    sprite->data[7] = 0;
+    sprite->callback = AnimSpriteMoveLinear_Step;
+}
+
+void AnimSpriteMoveLinearWithXYFlip(struct Sprite *sprite)
+{
+    s16 origOffsetY = gBattleAnimArgs[1];
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[6]); // Anim Number
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+
+    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite,  TRUE);
+
+    gBattleAnimArgs[1] = origOffsetY;
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    {
+        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        gBattleAnimArgs[3] = -gBattleAnimArgs[3];
+    }
+
+    sprite->data[0] =  gBattleAnimArgs[4];             // Duration
+    sprite->data[1] =  sprite->x + gBattleAnimArgs[0]; // Start X
+    sprite->data[2] =  sprite->x + gBattleAnimArgs[2]; // End X
+    sprite->data[3] =  sprite->y + gBattleAnimArgs[1]; // Start Y
+    sprite->data[4] =  sprite->y + gBattleAnimArgs[3]; // End Y
+
+    InitAnimLinearTranslation(sprite);
+    sprite->data[5] = 0;
+    sprite->data[6] = 0;
+    sprite->data[7] = 0;
+    sprite->callback  = AnimSpriteMoveLinear_Step;
+}
+
+void AnimSpriteMoveToMonPos(struct Sprite* sprite)
+{
+    if (gBattleAnimArgs[3] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    sprite->data[0] = gBattleAnimArgs[2];
+    sprite->data[2] = GetBattlerSpriteCoord(
+        (gBattleAnimArgs[3] == ANIM_ATTACKER) ? gBattleAnimAttacker : gBattleAnimTarget, 
+        BATTLER_COORD_X_2);
+    sprite->data[4] = GetBattlerSpriteCoord(
+        (gBattleAnimArgs[3] == ANIM_ATTACKER) ? gBattleAnimAttacker : gBattleAnimTarget, 
+        BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->callback = StartAnimLinearTranslation;
+    StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
+}
+
+void AnimSpriteProjectileParabolic(struct Sprite* sprite)
+{
+    if (gBattleAnimArgs[6] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[7]); // Anim Number
+
+    sprite->data[0] = gBattleAnimArgs[5]; // Duration
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    sprite->data[5] = gBattleAnimArgs[4]; // Height
+    InitAnimArcTranslation(sprite);
+    sprite->callback = AnimSpriteProjectileParabolic_Step;
+}
+
+void AnimSpriteProjectileParabolicReversed1(struct Sprite* sprite)
+{
+    if (gBattleAnimArgs[6] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    SetSpriteCoordsToAnimAttackerCoords(sprite);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            sprite->x -= gBattleAnimArgs[0];
+            sprite->y -= gBattleAnimArgs[1];
+        }
+    else
+        {
+            sprite->x += gBattleAnimArgs[0];
+            sprite->y += gBattleAnimArgs[1];
+        }
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[7]); // Anim Number
+
+    sprite->data[0] = gBattleAnimArgs[5]; // Duration
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    sprite->data[5] = gBattleAnimArgs[4]; // Height
+    InitAnimArcTranslation(sprite);
+    sprite->callback = AnimSpriteProjectileParabolic_Step;
+}
+
+void AnimSpriteProjectileParabolicReversed2(struct Sprite* sprite)
+{
+    if (gBattleAnimArgs[6] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    SetSpriteCoordsToAnimAttackerCoords(sprite);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            sprite->x -= gBattleAnimArgs[0];
+            sprite->y -= gBattleAnimArgs[1];
+            sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) - gBattleAnimArgs[2];
+            sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) - gBattleAnimArgs[3];
+        }
+    else
+        {
+            sprite->x += gBattleAnimArgs[0];
+            sprite->y += gBattleAnimArgs[1];
+            sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+            sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+        }
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[7]); // Anim Number
+
+    sprite->data[0] = gBattleAnimArgs[5]; // Duration
+    sprite->data[5] = gBattleAnimArgs[4]; // Height
+    InitAnimArcTranslation(sprite);
+    sprite->callback = AnimSpriteProjectileParabolic_Step;
+}
+
+void AnimSpriteRises(struct Sprite *sprite)
+{
+    if (gBattleAnimArgs[2] != ANIM_ATTACKER)
+        InitSpritePosToAnimTarget(sprite, TRUE);
+    else
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[2] = sprite->x;
+    sprite->data[4] = sprite->y - 32;
+    sprite->callback = StartAnimLinearTranslation;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}
+
+void AnimSpriteSpiralToMonPos(struct Sprite *sprite)
+{
+    if (gBattleAnimArgs[7] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[8]); // Anim Number
+    
+    sprite->x += gBattleAnimArgs[0];
+    sprite->y += gBattleAnimArgs[1];
+    sprite->data[0] = gBattleAnimArgs[6]; // Not duration
+    sprite->data[1] = gBattleAnimArgs[2]; // Initial radius
+    sprite->data[2] = gBattleAnimArgs[3]; // How much to circle the target
+    sprite->data[3] = gBattleAnimArgs[4]; // Starting Offset X
+    sprite->data[4] = gBattleAnimArgs[5]; // Angle increment
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+    sprite->callback = TranslateSpriteInGrowingCircle;
+    sprite->callback(sprite);
+}
+
+void AnimSpriteStatic(struct Sprite *sprite)
+{
+    StartSpriteAnim(sprite, gBattleAnimArgs[2]);
+
+    if (gBattleAnimArgs[4] == 0)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    sprite->data[0] = gBattleAnimArgs[3];
+    sprite->callback = DestroyAnimSpriteAfterTimer;
+}
+
+void AnimSpriteStaticVisualXFlip(struct Sprite *sprite)
+{
+    u8 argIsAttacker = gBattleAnimArgs[4];
+    u8 battler;
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[2]);
+
+    if (argIsAttacker == 0)
+    {
+        battler = gBattleAnimAttacker;
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    }
+    else
+    {
+        battler = gBattleAnimTarget;
+        InitSpritePosToAnimTarget(sprite, TRUE);
+    }
+
+    sprite->hFlip = (GetBattlerSide(battler) == B_SIDE_PLAYER);
+    sprite->data[0]  = gBattleAnimArgs[3];
+    sprite->callback = DestroyAnimSpriteAfterTimer;
+}
+
+void AnimSpriteStaticVisualXYFlipWithHeightAdjustment(struct Sprite *sprite)
+{
+    bool8 isFoe = (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER);
+
+    StartSpriteAnim(sprite, gBattleAnimArgs[2]);
+
+    if (isFoe)
+        gBattleAnimArgs[1] += 32;
+
+    if (gBattleAnimArgs[4] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+
+    sprite->hFlip = isFoe;
+    sprite->vFlip = isFoe;
+
+    sprite->data[0]  = gBattleAnimArgs[3];
+    sprite->callback = DestroyAnimSpriteAfterTimer;
+}
+
+void AnimSpriteStaticPositionXYFlip(struct Sprite *sprite)
+{
+    StartSpriteAnim(sprite, gBattleAnimArgs[4]);
+
+    SetSpriteCoordsToAnimAttackerCoords(sprite);
+
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        {
+            sprite->x -= gBattleAnimArgs[0];
+            sprite->y -= gBattleAnimArgs[1];
+        }
+    else
+        {
+            sprite->x += gBattleAnimArgs[0];
+            sprite->y += gBattleAnimArgs[1];
+        }
+
+    sprite->data[0] = gBattleAnimArgs[3]; // Duration
+    sprite->callback = RunStoredCallbackWhenAnimEnds;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSpriteAfterTimer);
+}
+
+void AnimSpriteStaticMirrored(struct Sprite *sprite)
+{
+    if (gBattleAnimArgs[3] == ANIM_ATTACKER)
+        InitSpritePosToAnimAttacker(sprite, TRUE);
+    else
+        InitSpritePosToAnimTarget(sprite, TRUE);
+    
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    {
+        sprite->x -= gBattleAnimArgs[0];
+        StartSpriteAnim(sprite, 1);
+    }
+    else
+    {
+        sprite->x += gBattleAnimArgs[0];
+        StartSpriteAnim(sprite, 0);
+    }
+
+
+    sprite->data[0] = gBattleAnimArgs[2]; // Duration
+    sprite->data[1] = sprite->x + gBattleAnimArgs[0]; // Starting X
+    sprite->data[3] = sprite->y + gBattleAnimArgs[1]; // Starting Y
+    
+    sprite->callback = RunStoredCallbackWhenAnimEnds;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}
+
+void AnimQuestionMarkGen1(struct Sprite *sprite)
+{
+    SetSpriteCoordsToAnimAttackerCoords(sprite);
+    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        sprite->x -= gBattleAnimArgs[0];
+    else
+        sprite->x += gBattleAnimArgs[0];
+
+    sprite->y += gBattleAnimArgs[1];
+    sprite->data[0]  = gBattleAnimArgs[2];
+    sprite->callback = DestroyAnimSpriteAfterTimer;
+}
+
+static void AnimSpriteMoveLinear_Step(struct Sprite *sprite)
+{
+    if (!AnimTranslateLinear(sprite))
+    {
+        sprite->y2 += Sin(sprite->data[7] >> 8, sprite->data[5]);
+        sprite->data[7] += sprite->data[6];
+    }
+    else
+    {
+        DestroyAnimSprite(sprite);
+    }
+}
+
+static void AnimSpriteProjectileParabolic_Step(struct Sprite* sprite)
+{
+    if (TranslateAnimHorizontalArc(sprite))
+        DestroyAnimSprite(sprite);
+}
