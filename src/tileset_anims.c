@@ -1192,16 +1192,10 @@ static void BlendAnimPalette_BattleDome_FloorLightsNoBlend(u16 timer)
 // palette: general 00
 static const u16 sTilesetAnims_General_Flower_Frame0[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/flower/0.png", ".4bpp");
 static const u16 sTilesetAnims_General_Flower_Frame1[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/flower/1.png", ".4bpp");
-static const u16 sTilesetAnims_General_Flower_Frame2[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/flower/2.png", ".4bpp");
-static const u16 sTilesetAnims_General_Flower_Frame3[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/flower/3.png", ".4bpp");
-static const u16 sTilesetAnims_General_Flower_Frame4[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/flower/4.png", ".4bpp");
 
 static const u16 *const sTilesetAnims_General_Flower[] = {
     sTilesetAnims_General_Flower_Frame0,
     sTilesetAnims_General_Flower_Frame1,
-    sTilesetAnims_General_Flower_Frame2,
-    sTilesetAnims_General_Flower_Frame3,
-    sTilesetAnims_General_Flower_Frame4
 };
 
 // palette: general 04
@@ -1209,20 +1203,14 @@ static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame0[] = I
 static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame1[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/1.png", ".4bpp");
 static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame2[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/2.png", ".4bpp");
 static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame3[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/3.png", ".4bpp");
-static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame4[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/4.png", ".4bpp");
-static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame5[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/5.png", ".4bpp");
-static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame6[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/6.png", ".4bpp");
-static const u16 sTilesetAnims_General_Water_Current_LandWatersEdge_Frame7[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/water_current_landwatersedge/7.png", ".4bpp");
 
 static const u16 *const sTilesetAnims_General_Water_Current_LandWatersEdge[] = {
     sTilesetAnims_General_Water_Current_LandWatersEdge_Frame0,
     sTilesetAnims_General_Water_Current_LandWatersEdge_Frame1,
     sTilesetAnims_General_Water_Current_LandWatersEdge_Frame2,
     sTilesetAnims_General_Water_Current_LandWatersEdge_Frame3,
-    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame4,
-    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame5,
-    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame6,
-    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame7
+    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame2,
+    sTilesetAnims_General_Water_Current_LandWatersEdge_Frame1,
 };
 
 // palette: general 04
@@ -1230,20 +1218,14 @@ static const u16 sTilesetAnims_General_SandWatersEdge_Frame0[] = INCGFX_U16("dat
 static const u16 sTilesetAnims_General_SandWatersEdge_Frame1[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/1.png", ".4bpp");
 static const u16 sTilesetAnims_General_SandWatersEdge_Frame2[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/2.png", ".4bpp");
 static const u16 sTilesetAnims_General_SandWatersEdge_Frame3[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/3.png", ".4bpp");
-static const u16 sTilesetAnims_General_SandWatersEdge_Frame4[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/4.png", ".4bpp");
-static const u16 sTilesetAnims_General_SandWatersEdge_Frame5[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/5.png", ".4bpp");
-static const u16 sTilesetAnims_General_SandWatersEdge_Frame6[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/6.png", ".4bpp");
-static const u16 sTilesetAnims_General_SandWatersEdge_Frame7[] = INCGFX_U16("data/tilesets/primary/general_frlg/anim/sandwatersedge/7.png", ".4bpp");
 
 static const u16 *const sTilesetAnims_General_SandWatersEdge[] = {
     sTilesetAnims_General_SandWatersEdge_Frame0,
     sTilesetAnims_General_SandWatersEdge_Frame1,
     sTilesetAnims_General_SandWatersEdge_Frame2,
     sTilesetAnims_General_SandWatersEdge_Frame3,
-    sTilesetAnims_General_SandWatersEdge_Frame4,
-    sTilesetAnims_General_SandWatersEdge_Frame5,
-    sTilesetAnims_General_SandWatersEdge_Frame6,
-    sTilesetAnims_General_SandWatersEdge_Frame7
+    sTilesetAnims_General_SandWatersEdge_Frame2,
+    sTilesetAnims_General_SandWatersEdge_Frame1,
 };
 
 // palette: general 00
@@ -1308,17 +1290,17 @@ static const u16 *const sTilesetAnims_CeladonGym_Flowers[] = {
 
 static void QueueAnimTiles_General_Frlg_Flower(u16 timer)
 {
-    AppendTilesetAnimToBuffer(sTilesetAnims_General_Flower[timer % ARRAY_COUNT(sTilesetAnims_General_Flower)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(508)), 4 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(sTilesetAnims_General_Flower[timer % ARRAY_COUNT(sTilesetAnims_General_Flower)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(1)), 1 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_Water_Current_LandWatersEdge(u16 timer)
 {
-    AppendTilesetAnimToBuffer(sTilesetAnims_General_Water_Current_LandWatersEdge[timer % ARRAY_COUNT(sTilesetAnims_General_Water_Current_LandWatersEdge)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(416)), 48 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(sTilesetAnims_General_Water_Current_LandWatersEdge[timer % ARRAY_COUNT(sTilesetAnims_General_Water_Current_LandWatersEdge)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(2)), 1 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_SandWatersEdge(u16 timer)
 {
-    AppendTilesetAnimToBuffer(sTilesetAnims_General_SandWatersEdge[timer % ARRAY_COUNT(sTilesetAnims_General_SandWatersEdge)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(464)), 18 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(sTilesetAnims_General_SandWatersEdge[timer % ARRAY_COUNT(sTilesetAnims_General_SandWatersEdge)], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(3)), 1 * TILE_SIZE_4BPP);
 }
 
 static void TilesetAnim_General_Frlg(u16 timer)
